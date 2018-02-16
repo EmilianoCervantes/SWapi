@@ -46,12 +46,40 @@ public class ListaPersonajesFragment extends ListFragment {
         CharacterAdapter adapter = getAdapter();
         setListAdapter(adapter);
 
-        mQueue = VolleySingleton.getInstance(this.getContext()).getRequestQueue();
-        jsonStarWars(getSWString(),adapter);
+        mQueue = VolleySingleton.getInstance(this).getRequestQueue();
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=1&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=2&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=3&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=4&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=5&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=6&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=7&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=8&format=json"),adapter);
+        jsonStarWars(getSWString("https://swapi.co/api/people/?page=9&format=json"),adapter);
     }
 
     private CharacterAdapter getAdapter() {
+        CharacterAdapter adapter = new CharacterAdapter(
+                getActivity(),
+                R.layout.character_list_layout,
+                new ArrayList<Character>());
+        try {
+            JSONObject jsonObject = new JSONObject(getSWString());
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            for(int i = 0; i < jsonArray.length();i++){
+                JSONObject jsonObject01 = jsonArray.getJSONObject(i);
+                JSONArray characters = jsonObject01.getJSONArray("matches");
+                JSONObject match = characters.getJSONObject(j);
+                Character ch = new Character();
+                ch.fecha = match.getString("birth_year");
+                ch.nombre = match.getString("name");
+                adapter.add(ch);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        return adapter;
     }
 
     private void jsonStarWars(String url, final CharacterAdapter adapter){
@@ -91,9 +119,9 @@ public class ListaPersonajesFragment extends ListFragment {
         mQueue.add(request);
     }
 
-    private String getSWString(){
+    private String getSWString(String url){
         Uri builtUri;
-        builtUri = Uri.parse("https://swapi.co/api/people/?page=1&format=json").buildUpon()
+        builtUri = Uri.parse(url).buildUpon()
                 .build();
         return builtUri.toString();
     }
