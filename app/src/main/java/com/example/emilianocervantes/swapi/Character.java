@@ -5,5 +5,5 @@ package com.example.emilianocervantes.swapi;
  */
 
 public class Character {
-    public String nombre, fecha, urlImage;
+    public String nombre, fecha;
 }
