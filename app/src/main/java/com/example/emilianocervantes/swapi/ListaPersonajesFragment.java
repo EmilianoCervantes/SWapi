@@ -82,43 +82,6 @@ public class ListaPersonajesFragment extends ListFragment {
         return adapter;
     }
 
-    private void jsonStarWars(String url, final CharacterAdapter adapter){
-        //Limpie el adapatador
-        adapter.clear();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                //Listener positivo
-                //Si pudo consultar entra ahi
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    JSONArray jsonArray = data.getJSONArray("results");
-                    for (int i = 0; i<jsonArray.length();i++){
-                        //Para el name
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                        Character character = new Character();
-                        character.nombre = jsonObject.getString("name");
-                        character.fecha = jsonObject.getLong("date")+"";
-                        adapter.add(character);
-                    }
-                    //Actualizar vista
-                    adapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                /**/
-                Toast.makeText(getApplicationContext(),error.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-        mQueue.add(request);
-    }
-
     private String getSWString(String url){
         Uri builtUri;
         builtUri = Uri.parse(url).buildUpon()
