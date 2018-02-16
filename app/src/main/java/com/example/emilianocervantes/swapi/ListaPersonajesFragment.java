@@ -47,17 +47,7 @@ public class ListaPersonajesFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         CharacterAdapter adapter = getAdapter();
         setListAdapter(adapter);
-
-        mQueue = VolleySingleton.getInstance(this).getRequestQueue();
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=1&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=2&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=3&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=4&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=5&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=6&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=7&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=8&format=json"),adapter);
-        jsonStarWars(getSWString("https://swapi.co/api/people/?page=9&format=json"),adapter);
+        mQueue = VolleySingleton.getInstance(getActivity()).getRequestQueue();
     }
 
     private CharacterAdapter getAdapter() {
@@ -66,14 +56,16 @@ public class ListaPersonajesFragment extends ListFragment {
                 R.layout.character_list_layout,
                 new ArrayList<Character>());
         try {
-            JSONObject jsonObject = new JSONObject(getSWString());
-            JSONArray jsonArray = jsonObject.getJSONArray("results");
-            for(int i = 0; i < jsonArray.length();i++){
-                JSONObject character = jsonArray.getJSONObject(i);
-                Character ch = new Character();
-                ch.fecha = character.getString("birth_year");
-                ch.nombre = character.getString("name");
-                adapter.add(ch);
+            for (int j= 0; j< 9; j++){
+                JSONObject jsonObject = new JSONObject(getSWString("https://swapi.co/api/people/?page="+j+"&format=json"));
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
+                for(int i = 0; i < jsonArray.length();i++){
+                    JSONObject character = jsonArray.getJSONObject(i);
+                    Character ch = new Character();
+                    ch.fecha = character.getString("birth_year");
+                    ch.nombre = character.getString("name");
+                    adapter.add(ch);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
