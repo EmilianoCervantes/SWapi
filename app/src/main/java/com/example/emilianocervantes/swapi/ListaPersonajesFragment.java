@@ -46,7 +46,7 @@ public class ListaPersonajesFragment extends ListFragment {
         CharacterAdapter adapter = getAdapter();
         setListAdapter(adapter);
 
-        mQueue = VolleySingleton.getInstance(this).getRequestQueue();
+        mQueue = VolleySingleton.getInstance(this.getContext()).getRequestQueue();
         jsonStarWars(getSWString(),adapter);
     }
 
